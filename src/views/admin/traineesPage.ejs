@@ -1,0 +1,128 @@
+<%-include('header'); -%>
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas1" aria-labelledby="offcanvas1Label">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvas1Label">Add Trainee</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="card-body">
+        <div>
+          <form action="/addtrainee" method="POST">
+            <input type="hidden" value="<%=token%>" name="token">
+            <div class="form-floating mb-3">
+              <input type="text" name="traineeid" id="traineeid" class="form-control" placeholder="Trainee ID" required>
+              <label for="traineeid">Trainee ID</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" name="name" id="name" class="form-control" placeholder="Trainee Name" required>
+              <label for="name">Trainee Name</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+              <label for="email">Email</label>
+            </div>
+            <label class="form-floating mb-3" for="courses">Courses</label>
+            <p id="selectedCourses"></p>
+            <div class="form-floating mb-3">
+              <select type="text" name="courses" id="courses" class="form-control" placeholder="Courses" required
+                multiple>
+                <% for(var i=0;i<courseArr.length;i++){ %>
+                  <option value="<%=courseArr[i].course_id%>-<%=courseArr[i].course_name%>">
+                    <%=courseArr[i].course_id%> - <%=courseArr[i].course_name%>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-outline-primary float-end">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Page Content -->
+  <div id="content">
+    <div class="card m-4">
+      <div class="card-body">
+        <div>
+          <h2 class="float-start">Trainees</h2>
+          <button class="btn btn-success float-end" onclick="exceller('trainees')">Download</button>
+          <a class="btn btn-outline-primary float-end me-2" data-bs-toggle="offcanvas" href="#offcanvas1" role="button"
+            aria-controls="offcanvas1">
+            Add trainee +
+          </a>
+        </div>
+        <input class="form-control me-2" type="search" placeholder="Search Trainee Name" aria-label="Search"
+          id="myInput" onkeyup="myFunction()">
+        <table class="table" id="myTable">
+          <thead>
+            <tr>
+              <th>S.no</th>
+              <th>Trainee ID</th>
+              <th>Trainee Name</th>
+              <th>Courses</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <% for(var i=0; i<traineeArr.length; i++) {%>
+              <tr>
+                <td>
+                  <%=i+1%>
+                </td>
+                <td>
+                  <%= traineeArr[i].user_id %>
+                </td>
+                <td>
+                  <%= traineeArr[i].name %>
+                </td>
+                <td>
+                  <%= traineeArr[i].courses %>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-outline-danger float-end" data-bs-toggle="modal"
+                    data-bs-target="#deleteTraineeModal<%=i%>">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              <!-- Modal -->
+              <div class="modal fade" id="deleteTraineeModal<%=i%>" tabindex="-1"
+                aria-labelledby="deleteTraineeModal<%=i%>Label" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteTraineeModal<%=i%>Label">Delete Trainee</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Do you want to delete the Trainee : "<%= traineeArr[i].user_id %> - <%= traineeArr[i].name %>" ?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <form action="/deletetrainee" method="POST">
+                        <input type="hidden" name="token" value="<%=token%>">
+                        <input type="hidden" name="traineeid" value="<%=traineeArr[i].user_id%>">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  </div>
+  </body>
+  <script>
+    document.getElementById("3").classList.add('active');
+    var flag = "<%=flag%>";
+    if (flag === '1') {
+      alert('A trainee with the same ID already exists')
+    }
+  </script>
+<%-include('footer'); -%>

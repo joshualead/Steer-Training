@@ -1,0 +1,135 @@
+<%-include('header')%>
+<body>
+  <!-- Modal -->
+  <div class="modal fade" id="completeModal" tabindex="-1" aria-labelledby="completeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="completeModalLabel">Complete the course</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Do you want to complete the course?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <form action="/trainer/complete/course" method="POST">      
+            <input type="hidden" value="<%=token%>" name="token">
+            <input type="hidden" name="courseid" value="<%=courseDetails.course_id%>"> 
+            <button class="btn btn-outline-success" type="submit">Complete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas1" aria-labelledby="offcanvas1Label">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvas1Label">Add Task</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="card-body">
+        <div>
+          <form action="/addtask" method="POST">
+          <input type="hidden" value="<%=token%>" name="token">
+          <input type="hidden" name="courseid" value="<%=courseDetails.course_id%>"> 
+          <div class="form-floating mb-3">
+            <input type="text" name="taskName" id="taskName" class="form-control" placeholder="Task Name">
+            <label for="taskName">Task Name</label>
+          </div>
+          <div class="form-floating mb-3">
+            <textarea type="text" name="taskDesc" id="taskDesc" class="form-control" rows="3">Task Description</textarea>
+          </div>
+          <button type="submit" class="btn btn-outline-primary float-end">Add</button>
+          </form>
+        </div>    
+      </div>
+    </div>
+  </div>
+  <div class="card m-4" style="background-color: #f5e7df;">
+    <div class="card-body">
+      <% if (courseDetails.assigned_status===2){%>
+        <div class="float-start text-success">
+          <h5 class="card-title">Course : <%=courseDetails.course_name%></h5>
+          <p class="card-text">Description : <%=courseDetails.description%></p>
+        </div>
+      <%}else{%>
+        <div class="float-start">
+          <h5 class="card-title">Course : <%=courseDetails.course_name%></h5>
+          <p class="card-text">Description : <%=courseDetails.description%></p>
+        </div>
+        <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#completeModal">Complete</button>
+      <%}%>
+    </div>
+  </div>
+  <div class="card m-4" style="background-color: #D0B8A8;"> 
+    <div class="card-body">
+      <h3 class="float-start">Tasks</h3>
+      <a class="btn btn-outline-primary float-end" data-bs-toggle="offcanvas" href="#offcanvas1" role="button" aria-controls="offcanvas1">
+        Add task +
+      </a>
+    </div>
+  </div>
+  <div class="m-4">
+    <% for(var i=0; i<taskArr.length; i++) {%>
+    <div class="card w-100 mb-2" style="background-color: #DFD3C3;">
+      <div>
+        <div class="card-body float-start w-75">
+          <div class="w-50 float-start" style="font-size: large;font-weight: bold;"> <%=taskArr[i].task_name%></div>
+        <div class="float-start" id="des<%=i%>"><%=taskArr[i].description%></div>
+        </div>
+        <div class="d-flex float-end">
+          <a href="/trainer/task/<%=token%>/<%=taskArr[i].task_name%>/<%=taskArr[i].task_id%>/<%=courseDetails.course_id%>" class="btn btn-outline-primary m-2 float-start">View</a>
+          <button type="button" class="btn btn-outline-danger m-2 float-end" data-bs-toggle="modal" data-bs-target="#deleteModal<%=i%>">
+            Delete
+          </button>
+          <!-- Modal -->
+          <div class="modal fade" id="deleteModal<%=i%>" tabindex="-1" aria-labelledby="deleteModal<%=i%>Label" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModal<%=i%>Label">Delete the task</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Do you want to delete the task : "<%=taskArr[i].task_name%>" ?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <form action="/deletetask" method="POST">          
+                    <input type="hidden" value="<%=token%>" name="token">
+                    <input type="hidden" value="<%=taskArr[i].task_id%>" name="taskid">
+                    <button class="btn btn-outline-danger">Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+  </div>
+ 
+</body>
+<script>
+   var len = "<%=taskArr.length%>";
+  len = parseInt(len)
+  for(var i=0;i<len;i++){
+    var newTextid =document.getElementById(`des${i}`);
+    var newText = linkify(newTextid.innerText);
+    newTextid.innerHTML = newText;
+  }
+  function linkify(inputText) {
+    var replacedText, replacePattern1, replacePattern2, replacePattern3;
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+    replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+    replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+    return replacedText;
+  }
+</script>
+<%-include('footer')%>

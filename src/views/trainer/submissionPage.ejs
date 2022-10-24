@@ -1,0 +1,60 @@
+<%-include('header')%>
+<body>
+  <div class="card m-4">
+    <div class="card-body">
+      <h3 class="float-start"> Submission for "<%=taskname%>" (Task : <%=taskid%>) by <%=traineename%></h3>
+      <div class="float-end">
+        <form action="/score/edit" method="POST">
+        <input type="hidden" name="token" value="<%=token%>">
+        <!-- <input type="hidden" name="taskid" value="<%=taskid%>"> -->
+        <input type="hidden" name="taskname" value="<%=taskname%>">
+        <input type="hidden" name="traineename" value="<%=traineename%>">
+        <!-- <input type="hidden" name="courseid" value="<%=courseid%>"> -->
+        <input type="hidden" name="scoreid" value="<%=scoreid%>">
+        <label for="score" class="float-start align-middle m-2">Score : </label>
+        <input style="border-style: hidden; width: 60px;" class="float-start m-2" type="number" value="<%=score%>" name="score" id="score">
+        <button type="submit" class="btn btn-outline-warning float-end">Edit</button>
+      </form></div>
+    </div>
+  </div>
+  <div class="card m-4">
+    <div class="card-body m-4">
+      <%if (sub.length===0){%>
+        <center><p><i>No submissions from <%=traineename%></i></p></center>
+      <%}%>
+      <%for(var i=0;i<sub.length;i++){%>
+      <p><i>Submitted on <%=sub[i].date%></i></p>
+      <div class="m-4" id="content<%=i%>"><%=sub[i].content%></div>
+      <hr>
+      <%}%>
+    </div>
+  </div>
+</body>
+<script>
+  var mydiv =  document.getElementById('navdiv');
+  var aTag = document.createElement('a');
+  aTag.setAttribute('href',"/trainer/task/<%=token%>/<%=taskname%>/<%=taskid%>/<%=courseid%>");
+  aTag.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+</svg>`;
+  mydiv.appendChild(aTag);
+
+  var len = "<%=sub.length%>";
+  len = parseInt(len)
+  for(var i=0;i<len;i++){
+    var newTextid =document.getElementById(`content${i}`);
+    var newText = linkify(newTextid.innerText);
+    newTextid.innerHTML = newText;
+  }
+  function linkify(inputText) {
+    var replacedText, replacePattern1, replacePattern2, replacePattern3;
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+    replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+    replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+    return replacedText;
+  }
+</script>
+<%-include('footer')%>

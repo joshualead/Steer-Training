@@ -1,0 +1,107 @@
+<%-include('header'); -%>
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas1" aria-labelledby="offcanvas1Label">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvas1Label">Add Course</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="card-body">
+        <div>
+          <form action="/addcourse" method="POST">
+            <input type="hidden" value="<%=token%>" name="token">
+            <div class="form-floating mb-3">
+              <input type="text" name="courseName" id="courseName" class="form-control" placeholder="Course Name" required>
+              <label id="courseName">Course Name</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" name="courseDesc" id="courseDesc" class="form-control" placeholder="Course Description" required>
+              <label for="courseDesc">Course Description</label>
+            </div>
+          <button type="submit" class="btn btn-outline-primary float-end">Add</button>
+          </form>
+        </div>    
+      </div>
+    </div>
+  </div>
+  <!-- Page Content -->
+  <div id="content">          
+    <div class="card m-4">
+      <div class="card-body">
+        <div><h2 class="float-start">Courses</h2>
+          <button class="btn btn-success float-end" onclick="exceller('courses')">Download</button>
+          <a class="btn btn-outline-primary float-end me-2" data-bs-toggle="offcanvas" href="#offcanvas1" role="button" aria-controls="offcanvas1">
+            Add course +
+          </a>
+        </div>
+        <input class="form-control me-2" type="search" placeholder="Search Course Name" aria-label="Search" id="myInput" onkeyup="myFunction()">
+        <table class="table" id="myTable">
+          <thead>
+            <tr>
+              <th>S.no</th>
+              <th>Course ID</th>
+              <th>Course Name</th>
+              <th>Course Description</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <% for(var i=0; i<courseArr.length; i++) {%>
+              <% if (courseArr[i].assigned_status===1){ %>
+                <tr class="table-primary">
+              <% } else if (courseArr[i].assigned_status===2){ %>
+                <tr class="table-primary">
+              <% } else { %>
+                <tr>
+              <% } %>
+                <td><%=i+1%></td>
+                <td><%= courseArr[i].course_id %></td>
+                <td><%= courseArr[i].course_name %></td>
+                <td><%= courseArr[i].description %></td>
+                <td>
+                  <button type="button" class="btn btn-outline-danger float-end" data-bs-toggle="modal" data-bs-target="#deleteCourseModal<%=i%>" onclick="mymFunction()">
+                    Delete
+                  </button>
+                </td>
+              </tr> 
+              <!-- Modal -->
+              <div class="modal fade" id="deleteCourseModal<%=i%>" tabindex="-1" aria-labelledby="deleteCourseModal<%=i%>Label" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteCourseModal<%=i%>Label">Delete Course</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Deleting a course will delete all of its related contents. It is recommended not to delete any course so that the portal can maintain a history.
+                      <br>
+                      Do you want to delete the Course : "<%= courseArr[i].course_id %> - <%= courseArr[i].course_name %>" ?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <form action="/deletecourse" method="POST">
+                        <input type="hidden" name="token" value="<%=token%>">
+                        <input type="hidden" name="courseid" value="<%=courseArr[i].course_id%>">
+                        <button class="btn btn-danger" type="submit" id="myBtn">Delete</button>
+                      </form>      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </tbody>
+        </table>
+      </div>    
+    </div>
+  </div>
+</div>
+</body>
+<script>
+  document.getElementById("1").classList.add('active');
+  const btn = document.getElementById("myBtn")
+  function mymFunction() {
+  btn.disabled = true;
+  setTimeout(()=>{
+    btn.disabled = false;
+    console.log('Button Activated')}, 5000)
+}
+</script>
+<%-include('footer'); -%>

@@ -1,0 +1,79 @@
+<%-include('header')%>
+
+  <body>
+    <div class="card m-4">
+      <div class="card-body">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph"
+              type="button" role="tab" aria-controls="pills-graph" aria-selected="true">New Submission</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-table-tab" data-bs-toggle="pill" data-bs-target="#pills-table"
+              type="button" role="tab" aria-controls="pills-table" aria-selected="false">Previous Submissions</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active m-4" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab"
+            tabindex="0">
+            <div class="m-4">
+              <%if (flag===1){%>
+                <div class="d-flex justify-content-center">
+                  <i>
+                    <h6 class="float-start m-4"> Done </h6>
+                  </i>
+                </div>
+                <%}%>
+                  <form action="/trainee/task/submit" method="POST">
+                    <div class="m-4"><label for="formControlTextarea" class="form-label">Type below <i>(use it to add links etc)</i>
+                      </label>
+                      <textarea class="form-control m-4" id="formControlTextarea" rows="3" name="content"></textarea>
+                      <button type="submit" class="btn btn-outline-success float-end">Submit</button>
+                    </div>
+                    <input type="hidden" value="<%=taskid%>" name="taskid">
+                    <input type="hidden" value="<%=token%>" name="token">
+                    <input type="hidden" value="<%=courseid%>" name="courseid">
+                  </form>
+            </div>
+          </div>
+          <div class="tab-pane fade m-4" id="pills-table" role="tabpanel" aria-labelledby="pills-table-tab"
+            tabindex="0">
+            <div class="card m-4">
+              <div class="card-body m-4">
+                <%if(sub.length===0){%>
+                  <i>No Previous Submissions</i>
+                  <%}%>
+                <%for(var i=0;i<sub.length;i++){%>
+                  <p><i>Submitted on <%=sub[i].date%></i></p>
+                  <div class="m-4" id="content<%=i%>">
+                    <%=sub[i].content%>
+                  </div>
+                  <hr>
+                <%}%>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    var len = "<%=sub.length%>";
+  len = parseInt(len)
+  for(var i=0;i<len;i++){
+    var newTextid =document.getElementById(`content${i}`);
+    var newText = linkify(newTextid.innerText);
+    newTextid.innerHTML = newText;
+  }
+  function linkify(inputText) {
+    var replacedText, replacePattern1, replacePattern2, replacePattern3;
+    replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+    replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+    replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+    replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+    return replacedText;
+  }
+  </script>
+  <%-include('footer')%>

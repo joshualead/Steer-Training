@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steer - Training Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+    <style>
+      body {
+      background-image: url("https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 15px;
+      width: 400px;
+      opacity: 0.9;
+    }
+    </style>
+</head>
+
+<body>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="opacity: 0.9;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Forgot Password ?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/forgot-password" method="post">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Your User ID" aria-label="Your User ID"
+                aria-describedby="button-addon2" name="userid" id="userid" required />
+              <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
+                Send mail
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card center">
+      <div class="card-body">
+        <h2 class="card-title m-4"><center>Hi there, Steerer</center></h2>
+        <form action="/" method="POST">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" placeholder="User ID" name="userID" id="we" autocomplete="off"
+              required />
+            <label id="we">User ID</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control" placeholder="Password" name="password" id="wel"
+              autocomplete="off" required />
+            <label id="wel">Password</label>
+          </div>
+          <%if (flag===1){%>
+            <i style="color: red">**Wrong credentials</i>
+            <br>
+            <%}%>
+              <a data-bs-toggle="modal" data-bs-target="#exampleModal" style="color: rgb(53, 104, 244);">
+                Forgot Password ?
+              </a>
+              <input type="submit" value="Login" class="btn btn-outline-info mt-4 mb-4 float-end" />
+        </form>
+      </div>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+
+</html>

@@ -1,0 +1,179 @@
+<%-include('header')%>
+<body>
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas1" aria-labelledby="offcanvas1Label">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvas1Label">Add Process Coordinator</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="card-body">
+        <div>
+          <form action="/addAdmin" method="POST">
+            <input type="hidden" value="<%=token%>" name="token">
+            <div class="form-floating mb-3">
+              <input type="text" name="adminid" id="adminid" class="form-control" placeholder="Coordinator ID" required>
+              <label for="adminid">Coordinator ID</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="text" name="adminname" id="adminname" class="form-control" placeholder="Coordinator Name" required>
+              <label for="adminname">Coordinator Name</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+              <label for="email">Coordinator Email</label>
+            </div>
+            <button type="submit" class="btn btn-outline-primary float-end">Add</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card m-4">
+    <div class="card-body">
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-graph-tab" data-bs-toggle="pill" data-bs-target="#pills-graph"
+            type="button" role="tab" aria-controls="pills-graph" aria-selected="true">Stats</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-table-tab" data-bs-toggle="pill" data-bs-target="#pills-table"
+            type="button" role="tab" aria-controls="pills-table" aria-selected="false">More</button>
+        </li>
+      </ul>
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active m-4" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab"
+          tabindex="0">
+          <center>
+            <div class="m-4">
+              <% for(var i=0; i<statusDetailsArr.length; i++) {%>
+                <div class="card m-2 float-start" style="width: 18rem;">
+                  <div class="card-body">
+                    <i>
+                    <h5 class="card-title">
+                    <% if (statusDetailsArr[i].assigned_status===0){%> 
+                      <div class="p-2 text-dark" style="background-color: #f5e97a;">Unassigned Courses</div>            
+                    <% } %>
+                    <% if (statusDetailsArr[i].assigned_status===1){%> 
+                      <div class="p-2 text-dark" style="background-color: #6bc1fa;">Assigned Courses</div>
+                    <% } %>
+                    <% if (statusDetailsArr[i].assigned_status===2){%> 
+                      <div class="p-2 text-dark" style="background-color: #6ccf67;">Completed Courses</div>
+                    <% } %>
+                    <% if (statusDetailsArr[i].assigned_status===3){%> 
+                      <div class="p-2 text-dark" style="background-color: #d690ed;">Ended Courses</div>
+                    <% } %>
+                  </h5>
+                </i>
+                <h2 class="card-text"><%=statusDetailsArr[i].status_details_count%></h2>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+
+            <div style="width: 400px;">
+                <canvas id="myChart"></canvas>
+            </div>  
+          </center>
+        </div>
+        <div class="tab-pane fade m-4" id="pills-table" role="tabpanel" aria-labelledby="pills-table-tab"
+          tabindex="0">
+          <div id="content">
+            <div class="card m-4">
+              <div class="card-body">
+                <div>
+                  <h2 class="float-start">Process Coordinators</h2>
+                  <button class="btn btn-success float-end" onclick="exceller('admins')">Download</button>
+                  <a class="btn btn-outline-primary float-end me-2" data-bs-toggle="offcanvas" href="#offcanvas1" role="button"
+                    aria-controls="offcanvas1">
+                    Add Coordinator +
+                  </a>
+                </div>
+                <input class="form-control me-2" type="search" placeholder="Search Coordinator Name" aria-label="Search"
+                  id="myInput" onkeyup="myFunction()">
+                <table class="table" id="myTable">
+                  <thead>
+                    <tr>
+                      <th>S.no</th>
+                      <th>Coordinator ID</th>
+                      <th>Coordinator Name</th>
+                    </tr>
+                  </thead>
+                  <tbody class="table-group-divider">
+                    <% for(var i=0; i<adminsArr.length; i++) {%>
+                      <tr>
+                        <td>
+                          <%=i+1%>
+                        </td>
+                        <td>
+                          <%= adminsArr[i].user_id %>
+                        </td>
+                        <td>
+                          <%= adminsArr[i].name %>
+                        </td>
+                        <td>
+                          <%if(adminsArr[i].user_id !== userid){%>
+                          <button type="button" class="btn btn-outline-danger float-end" data-bs-toggle="modal"
+                            data-bs-target="#deleteAdminModal<%=i%>">
+                            Delete
+                          </button>
+                          <%}%>
+                        </td>
+                      </tr>
+                      <!-- Modal -->
+                      <div class="modal fade" id="deleteAdminModal<%=i%>" tabindex="-1"
+                        aria-labelledby="deleteAdminModal<%=i%>Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteAdminModal<%=i%>Label">Delete admin</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              Do you want to delete the Admin : "<%= adminsArr[i].user_id %> - <%= adminsArr[i].name %>" ?
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <form action="/deleteAdmin" method="POST">
+                                <input type="hidden" name="token" value="<%=token%>">
+                                <input type="hidden" name="adminid" value="<%=adminsArr[i].user_id%>">
+                                <button class="btn btn-danger" type="submit">Delete</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  var yValues = "<%=arrCount%>";
+  var barColors = [
+    '#6ccf67','#f5e97a','#6bc1fa','d690ed'
+  ];
+  
+  new Chart("myChart", {
+    type: "pie",
+    data: {
+      datasets: [{
+        backgroundColor: barColors,
+        data: yValues
+      }]
+    },
+    options: {    
+      legend: {display: false},
+      title: {
+        display: false,
+      }
+    }
+  });
+  </script>
+<%-include('footer')%>
