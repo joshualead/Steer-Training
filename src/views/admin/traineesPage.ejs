@@ -18,14 +18,14 @@
               <input type="text" name="name" id="name" class="form-control" placeholder="Trainee Name" required>
               <label for="name">Trainee Name</label>
             </div>
-            <div class="form-floating mb-3">
+            <div class="form-floating">
               <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
               <label for="email">Email</label>
             </div>
-            <label class="form-floating mb-3" for="courses">Courses</label>
-            <p id="selectedCourses"></p>
-            <div class="form-floating mb-3">
-              <select type="text" name="courses" id="courses" class="form-control" placeholder="Courses" required
+            <label class="m-2"><b>Courses</b></label> 
+            <div class="form-floating">
+              <i><p id="pF" style="color: rgb(73, 69, 69);"></p></i>
+              <select type="text" name="courses" id="courses" class="form-control" onchange="showDropInfo()" placeholder="Courses" required
                 multiple>
                 <% for(var i=0;i<courseArr.length;i++){ %>
                   <option value="<%=courseArr[i].course_id%>-<%=courseArr[i].course_name%>">
@@ -120,6 +120,11 @@
   </body>
   <script>
     document.getElementById("3").classList.add('active');
+    function showDropInfo() {
+      var checked = document.querySelectorAll('#courses :checked');
+      var selected = [...checked].map(option => option.value);
+      pF.innerHTML = selected;
+    }
     var flag = "<%=flag%>";
     if (flag === '1') {
       alert('A trainee with the same ID already exists')
