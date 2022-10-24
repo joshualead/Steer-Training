@@ -15,8 +15,8 @@ app.use(bodyParser.json());
 
 app.use('/', routes);
 
-app.listen(process.env.APP_PORT, () =>
-  console.log(`Server started listening on port: ${process.env.APP_PORT}`)
+app.listen(process.env.PORT, () =>
+  console.log(`Server started listening on port: ${process.env.PORT}`)
 );
 
 module.exports = app;
