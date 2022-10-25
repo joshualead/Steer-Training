@@ -28,7 +28,6 @@
       </div>
     </div>
   </div>
-
   <div class="card m-4">
     <div class="card-body">
       <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -46,26 +45,26 @@
           tabindex="0">
           <center>
             <div class="m-4">
-              <% for(var i=0; i<statusDetailsArr.length; i++) {%>
+              <% for(var i=0; i<arrCount.length; i++) {%>
                 <div class="card m-2 float-start" style="width: 18rem;">
                   <div class="card-body">
                     <i>
                     <h5 class="card-title">
-                    <% if (statusDetailsArr[i].assigned_status===0){%> 
-                      <div class="p-2 text-dark" style="background-color: #f5e97a;">Unassigned Courses</div>            
+                    <% if (i===0){%> 
+                      <div class="p-2 text-dark" style="background-color: #b7b3aa;">Unassigned Courses</div>            
                     <% } %>
-                    <% if (statusDetailsArr[i].assigned_status===1){%> 
+                    <% if (i===1){%> 
                       <div class="p-2 text-dark" style="background-color: #6bc1fa;">Assigned Courses</div>
                     <% } %>
-                    <% if (statusDetailsArr[i].assigned_status===2){%> 
+                    <% if (i===2){%> 
                       <div class="p-2 text-dark" style="background-color: #6ccf67;">Completed Courses</div>
                     <% } %>
-                    <% if (statusDetailsArr[i].assigned_status===3){%> 
-                      <div class="p-2 text-dark" style="background-color: #d690ed;">Ended Courses</div>
+                    <% if (i===3){%> 
+                      <div class="p-2 text-dark" style="background-color: #f8e768;">Ended Courses</div>
                     <% } %>
                   </h5>
                 </i>
-                <h2 class="card-text"><%=statusDetailsArr[i].status_details_count%></h2>
+                <h2 class="card-text"><%=arrCount[i]%></h2>
                   </div>
                 </div>
               <% } %>
@@ -155,25 +154,27 @@
   </div>
 </body>
 <script>
-  var yValues = "<%=arrCount%>";
-  var barColors = [
-    '#6ccf67','#f5e97a','#6bc1fa','d690ed'
-  ];
-  
-  new Chart("myChart", {
-    type: "pie",
-    data: {
-      datasets: [{
-        backgroundColor: barColors,
-        data: yValues
-      }]
-    },
-    options: {    
-      legend: {display: false},
-      title: {
-        display: false,
-      }
+var xValues = ["Unassigned Courses", "Assigned Courses", "Completed Courses", "Ended Courses"];
+var yValues = "<%=arrCount%>".split(",");
+var barColors = [
+'#b7b3aa','#6bc1fa','#6ccf67','#f8e768'
+];
+
+new Chart("myChart", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Course Categories"
     }
-  });
+  }
+});
   </script>
 <%-include('footer')%>
