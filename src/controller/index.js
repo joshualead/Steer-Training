@@ -39,9 +39,23 @@ const Controller = {
       if (err) console.log(err);
       dal.adminDashboard((err, arr1) => {
         if (err) console.log(err);
-        var arrCount = arr1.map(function (obj) {
-          return parseInt(obj.status_details_count);
-        });
+        var arrCount =[0,0,0,0]
+        for(var i=0;i<arr1.length;i++)
+        {
+          if (arr1[i].assigned_status===0){
+            arrCount[0]=arr1[i].status_details_count;
+          }
+          else if (arr1[i].assigned_status===1){
+            arrCount[1]=arr1[i].status_details_count;
+          }
+          else if (arr1[i].assigned_status===2){
+            arrCount[2]=arr1[i].status_details_count;
+          }
+          else if (arr1[i].assigned_status===3){
+            arrCount[3]=arr1[i].status_details_count;
+          }
+        }
+        console.log(arr1,arrCount)
         res.render("./admin/dashboard", {
           adminsArr: arr2,
           userid: req.user.userid,
