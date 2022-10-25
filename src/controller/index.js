@@ -55,7 +55,6 @@ const Controller = {
             arrCount[3]=arr1[i].status_details_count;
           }
         }
-        console.log(arr1,arrCount)
         res.render("./admin/dashboard", {
           adminsArr: arr2,
           userid: req.user.userid,
