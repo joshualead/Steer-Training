@@ -263,6 +263,7 @@ const Controller = {
   adminScores: (req, res) => {
     dal.adminScores((err, arr) => {
       if (err) console.log(err);
+      var wholeAvg = 0;
       res.render("./admin/scores", {
         userid: req.user.userid,
         completed_courses: arr,
@@ -270,6 +271,7 @@ const Controller = {
         arrID: [],
         arrMark: [],
         token: req.params.token,
+        wholeAvg
       });
     });
   },
@@ -284,6 +286,7 @@ const Controller = {
         var arrMark = arr1.map(function (obj) {
           return parseInt(obj.avgmarks);
         });
+        var wholeAvg = arrMark.reduce((a, b) => a + b, 0) / arrMark.length;
         res.render("./admin/scores", {
           userid: req.user.userid,
           completed_courses: arr,
@@ -291,6 +294,7 @@ const Controller = {
           arrID,
           arrMark,
           token: req.params.token,
+          wholeAvg
         });
       });
     });
