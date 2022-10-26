@@ -48,7 +48,9 @@
               <% if (courseArr[i].assigned_status===1){ %>
                 <tr class="table-primary">
               <% } else if (courseArr[i].assigned_status===2){ %>
-                <tr class="table-primary">
+                <tr class="table-success">
+              <% } else if (courseArr[i].assigned_status===3){ %>
+                <tr class="table-warning">
               <% } else { %>
                 <tr>
               <% } %>
