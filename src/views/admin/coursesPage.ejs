@@ -1,3 +1,4 @@
+
 <%-include('header'); -%>
   <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas1" aria-labelledby="offcanvas1Label">
     <div class="offcanvas-header">
@@ -49,6 +50,8 @@
                 <tr class="table-primary">
               <% } else if (courseArr[i].assigned_status===2){ %>
                 <tr class="table-success">
+              <% } else if (courseArr[i].assigned_status===0){ %>
+                <tr class="table-secondary">
               <% } else if (courseArr[i].assigned_status===3){ %>
                 <tr class="table-warning">
               <% } else { %>
@@ -59,9 +62,11 @@
                 <td><%= courseArr[i].course_name %></td>
                 <td><%= courseArr[i].description %></td>
                 <td>
-                  <button type="button" class="btn btn-outline-danger float-end" data-bs-toggle="modal" data-bs-target="#deleteCourseModal<%=i%>" onclick="mymFunction()">
+                  <%if(!(cArr.includes(courseArr[i].course_id))){%>
+                  <button type="button" class="btn btn-outline-danger float-end" data-bs-toggle="modal" data-bs-target="#deleteCourseModal<%=i%>" onclick="mymFunction('<%=i%>')">
                     Delete
                   </button>
+                  <%}%>
                 </td>
               </tr> 
               <!-- Modal -->
@@ -82,7 +87,7 @@
                       <form action="/deletecourse" method="POST">
                         <input type="hidden" name="token" value="<%=token%>">
                         <input type="hidden" name="courseid" value="<%=courseArr[i].course_id%>">
-                        <button class="btn btn-danger" type="submit" id="myBtn">Delete</button>
+                        <button class="btn btn-danger" type="submit" id="myBtn<%=i%>">Delete</button>
                       </form>      
                     </div>
                   </div>
@@ -98,8 +103,8 @@
 </body>
 <script>
   document.getElementById("1").classList.add('active');
-  const btn = document.getElementById("myBtn")
-  function mymFunction() {
+  function mymFunction(i) {
+  const btn = document.getElementById("myBtn"+String(i))
   btn.disabled = true;
   setTimeout(()=>{
     btn.disabled = false;
