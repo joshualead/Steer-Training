@@ -55,8 +55,8 @@
             </li>
           </ul>
           <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active m-4" id="pills-graph" role="tabpanel" aria-labelledby="pills-graph-tab"
-              tabindex="0">
+            <div class="tab-pane fade show active m-4" id="pills-graph" role="tabpanel"
+              aria-labelledby="pills-graph-tab" tabindex="0">
               <canvas id="myChart" style="margin-left: 27%; width:100%;max-width:700px"></canvas>
             </div>
             <div class="tab-pane fade m-4" id="pills-table" role="tabpanel" aria-labelledby="pills-table-tab"
@@ -81,7 +81,10 @@
                     <% } %>
                 </tbody>
               </table>
-              <center><div class="card">Score for the Course : <%=wholeAvg%></div></center>
+              <center>
+                <div class="card">Score for the Course : <%=wholeAvg%>
+                </div>
+              </center>
             </div>
           </div>
         </div>
@@ -89,19 +92,31 @@
   </body>
   <script>
     document.getElementById("4").classList.add('active');
-    var xValues = "<%=arrID%>";
-    var yValues = "<%=arrMark%>";
+    var xValues = "<%=arrID%>".split(",");
+    var yValues = "<%=arrMark%>".split(",");
     var barColors = ["#FFAEBC", "#A0E7E5", "#B4F8C8", "#FBE7C6", "orange"];
-
     new Chart("myChart", {
       type: "bar",
       data: {
-        labels: xValues.split(","),
+        labels: xValues,
         datasets: [{
           backgroundColor: barColors,
-          data: yValues.split(",")
+          data: yValues
         }]
-      }
+      },
+      options: {
+        plugins: {
+            legend: {
+                display: false,
+            }
+        },
+        indexAxis: 'y',
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      },
     });
   </script>
   <%-include('footer')%>
