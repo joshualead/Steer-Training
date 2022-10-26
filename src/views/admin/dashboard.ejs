@@ -156,12 +156,9 @@
 <script>
 var xValues = ["Unassigned Courses", "Assigned Courses", "Completed Courses", "Ended Courses"];
 var yValues = "<%=arrCount%>".split(",");
-var barColors = [
-'#b7b3aa','#6bc1fa','#6ccf67','#f8e768'
-];
-
+var barColors = ['#b7b3aa','#6bc1fa','#6ccf67','#f8e768'];
 new Chart("myChart", {
-  type: "pie",
+  type: "doughnut",
   data: {
     labels: xValues,
     datasets: [{
@@ -173,16 +170,16 @@ new Chart("myChart", {
     title: {
       display: true,
       text: "Course Categories"
-    }
-  plugins: {
+    },
+    plugins: {
       legend: {
         onHover: handleHover,
         onLeave: handleLeave
       }
     }
-   },
- });
- function handleHover(evt, item, legend) {
+  }
+  });
+  function handleHover(evt, item, legend) {
   legend.chart.data.datasets[0].backgroundColor.forEach((color, index, colors) => {
     colors[index] = index === item.index || color.length === 9 ? color : color + '4D';
   });
@@ -194,5 +191,5 @@ function handleLeave(evt, item, legend) {
   });
   legend.chart.update();
 }
-  </script>
+</script>
 <%-include('footer')%>
