@@ -16,7 +16,7 @@ const connectionPromise = new Promise((res, rej) => {
 });
 
 const dal = {
-  selectCred : (uid,callback)=> {
+  selectCred: (uid, callback) => {
     connectionPromise
       .then(() => {
         con.query(QUERIES.SELECT_CRED, uid, callback);
@@ -32,21 +32,21 @@ const dal = {
       })
       .catch((err) => callback(err));
   },
-  addAdmin: (list,callback) => {
+  addAdmin: (list, callback) => {
     connectionPromise
       .then(() => {
         con.query(QUERIES.INSERT_ADMIN_TABLE, list, callback);
       })
       .catch((err) => callback(err));
   },
-  deleteAdmin: (uid,callback) => {
+  deleteAdmin: (uid, callback) => {
     connectionPromise
       .then(() => {
         con.query(QUERIES.DELETE_ADMIN, uid, callback);
       })
       .catch((err) => callback(err));
   },
-  showAdmins:(callback)=>{
+  showAdmins: (callback) => {
     connectionPromise
       .then(() => {
         con.query(QUERIES.SELECT_ADMIN_TABLE, callback);
@@ -74,31 +74,24 @@ const dal = {
       })
       .catch((err) => callback(err));
   },
+  updateTrainerCourse: (uid, callback) => {
+    connectionPromise
+      .then(() => {
+        con.query(QUERIES.UPDATE_TRAINER_ASSIGNED_COURSE, uid, callback);
+      })
+      .catch((err) => callback(err));
+  },
+  checkTcmapCourse: (callback) => {
+    connectionPromise
+      .then(() => {
+        con.query(QUERIES.CHECK_IF_COURSE_IN_TCMAP, callback);
+      })
+      .catch((err) => callback(err));
+  },
   getTrainerWithCid: (cid, callback) => {
     connectionPromise
       .then(() => {
         con.query(QUERIES.GET_TRAINER_WCID, cid, callback);
-      })
-      .catch((err) => callback(err));
-  },
-  deleteTaskWithCid: (cid, callback) => {
-    connectionPromise
-      .then(() => {
-        con.query(QUERIES.DELETE_TASK_WCID, cid, callback);
-      })
-      .catch((err) => callback(err));
-  },
-  deleteSubmissionWithCid: (cid, callback) => {
-    connectionPromise
-      .then(() => {
-        con.query(QUERIES.DELETE_SUBMISSION_WCID, cid, callback);
-      })
-      .catch((err) => callback(err));
-  },
-  deleteScoreWithCid: (cid, callback) => {
-    connectionPromise
-      .then(() => {
-        con.query(QUERIES.DELETE_SCORE_WCID, cid, callback);
       })
       .catch((err) => callback(err));
   },
@@ -214,24 +207,10 @@ const dal = {
       })
       .catch((err) => callback(err));
   },
-  selectTask: (cid, callback) => {
-    connectionPromise
-      .then(() => {
-        con.query(QUERIES.SELECT_TASK_TABLE, cid, callback);
-      })
-      .catch((err) => callback(err));
-  },
   selectCourse: (cid, callback) => {
     connectionPromise
       .then(() => {
         con.query(QUERIES.SELECT_COURSE_TABLE_SPEC, cid, callback);
-      })
-      .catch((err) => callback(err));
-  },
-  selectUnassignedCourse: (callback) => {
-    connectionPromise
-      .then(() => {
-        con.query(QUERIES.SELECT_UNASSIGNED_COURSES, callback);
       })
       .catch((err) => callback(err));
   },
@@ -298,13 +277,6 @@ const dal = {
       })
       .catch((err) => callback(err));
   },
-  deleteScore: (tid, callback) => {
-    connectionPromise
-      .then(() => {
-        con.query(QUERIES.DELETE_SCORE, tid, callback);
-      })
-      .catch((err) => callback(err));
-  },
   editScore: (list, callback) => {
     connectionPromise
       .then(() => {
@@ -362,13 +334,6 @@ const dal = {
       })
       .catch((err) => callback(err));
   },
-  checkIfMailExists:(email,callback)=>{
-    connectionPromise
-    .then(() => {
-      con.query(QUERIES.CHECK_IF_MAIL, email, callback);
-    })
-    .catch((err) => callback(err));
-  },
   refreshTokenInsert: (rt, callback) => {
     connectionPromise
       .then(() => {
@@ -383,13 +348,13 @@ const dal = {
       })
       .catch((err) => callback(err));
   },
-  refreshTokenDelete : (rt, callback) => {
+  refreshTokenDelete: (rt, callback) => {
     connectionPromise
       .then(() => {
         con.query(QUERIES.DELETE_TOKEN, rt, callback);
       })
       .catch((err) => callback(err));
-  }
+  },
 };
 
 module.exports = dal;
